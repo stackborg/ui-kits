@@ -1,0 +1,83 @@
+/*
+ * @stackborg/ui-kits — Default Theme Tokens
+ *
+ * CSS custom properties define ALL colors used by components.
+ * Consumer overrides these in their project's CSS to customize the theme.
+ *
+ * Values are HSL channel format: "H S% L%" (without hsl() wrapper).
+ * Components use them as: hsl(var(--ui-background))
+ *
+ * Example override in consumer project:
+ *   :root { --ui-primary: 221 83% 53%; }
+ *   .dark { --ui-background: 0 0% 3.9%; }
+ */
+
+/* ── Light Theme (default) ────────────────────────────────── */
+:root {
+  --ui-background: 0 0% 100%;
+  --ui-foreground: 0 0% 3.9%;
+
+  --ui-card: 0 0% 100%;
+  --ui-card-foreground: 0 0% 3.9%;
+
+  --ui-primary: 0 0% 9%;
+  --ui-primary-foreground: 0 0% 98%;
+
+  --ui-secondary: 0 0% 96.1%;
+  --ui-secondary-foreground: 0 0% 9%;
+
+  --ui-muted: 0 0% 96.1%;
+  --ui-muted-foreground: 0 0% 45.1%;
+
+  --ui-accent: 0 0% 96.1%;
+  --ui-accent-foreground: 0 0% 9%;
+
+  --ui-destructive: 0 84.2% 60.2%;
+  --ui-destructive-foreground: 0 0% 98%;
+
+  --ui-success: 142 76% 36%;
+  --ui-success-foreground: 0 0% 98%;
+
+  --ui-warning: 38 92% 50%;
+  --ui-warning-foreground: 0 0% 9%;
+
+  --ui-border: 0 0% 89.8%;
+  --ui-input: 0 0% 89.8%;
+  --ui-ring: 0 0% 3.9%;
+
+  --ui-radius: 0.5rem;
+}
+
+/* ── Dark Theme ───────────────────────────────────────────── */
+.dark {
+  --ui-background: 0 0% 3.9%;
+  --ui-foreground: 0 0% 98%;
+
+  --ui-card: 0 0% 3.9%;
+  --ui-card-foreground: 0 0% 98%;
+
+  --ui-primary: 0 0% 98%;
+  --ui-primary-foreground: 0 0% 9%;
+
+  --ui-secondary: 0 0% 14.9%;
+  --ui-secondary-foreground: 0 0% 98%;
+
+  --ui-muted: 0 0% 14.9%;
+  --ui-muted-foreground: 0 0% 63.9%;
+
+  --ui-accent: 0 0% 14.9%;
+  --ui-accent-foreground: 0 0% 98%;
+
+  --ui-destructive: 0 62.8% 30.6%;
+  --ui-destructive-foreground: 0 0% 98%;
+
+  --ui-success: 142 71% 45%;
+  --ui-success-foreground: 0 0% 98%;
+
+  --ui-warning: 38 92% 50%;
+  --ui-warning-foreground: 0 0% 9%;
+
+  --ui-border: 0 0% 14.9%;
+  --ui-input: 0 0% 14.9%;
+  --ui-ring: 0 0% 83.1%;
+}
