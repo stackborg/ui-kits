@@ -1,6 +1,6 @@
 {
   "name": "@stackborg/ui-kits",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "license": "MIT",
   "description": "Tailwind CSS component library — theme-agnostic, extendable, production-ready",
@@ -12,7 +12,14 @@
   "bugs": {
     "url": "https://github.com/stackborg/ui-kits/issues"
   },
-  "keywords": ["react", "components", "ui-kit", "tailwindcss", "design-system", "typescript"],
+  "keywords": [
+    "react",
+    "components",
+    "ui-kit",
+    "tailwindcss",
+    "design-system",
+    "typescript"
+  ],
   "author": "stackborg",
   "main": "./dist/ui-kits.cjs",
   "module": "./dist/ui-kits.js",
