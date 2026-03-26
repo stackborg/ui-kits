@@ -1,0 +1,20 @@
+# Source code
+src/
+.storybook/
+
+# Config
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+eslint.config.js
+components.json
+
+# Dev
+node_modules/
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# Storybook
+storybook-static/
