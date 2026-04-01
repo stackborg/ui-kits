@@ -25,7 +25,7 @@ npm install @stackborg/ui-kits
 
 **Peer dependencies:**
 ```bash
-npm install react react-dom tailwindcss
+npm install react react-dom tailwindcss framer-motion
 ```
 
 ## Setup
