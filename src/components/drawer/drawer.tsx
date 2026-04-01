@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 // ── Context ──────────────────────────────────────────────
@@ -18,6 +19,26 @@ function useDrawerContext() {
   return ctx;
 }
 
+// ── Animation Variants ───────────────────────────────────
+
+const backdropVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};
+
+const panelVariants = {
+  right: {
+    hidden: { x: "100%" },
+    visible: { x: 0, transition: { type: "spring" as const, damping: 30, stiffness: 300 } },
+    exit: { x: "100%", transition: { type: "tween" as const, duration: 0.2, ease: [0.4, 0, 1, 1] as [number, number, number, number] } },
+  },
+  left: {
+    hidden: { x: "-100%" },
+    visible: { x: 0, transition: { type: "spring" as const, damping: 30, stiffness: 300 } },
+    exit: { x: "-100%", transition: { type: "tween" as const, duration: 0.2, ease: [0.4, 0, 1, 1] as [number, number, number, number] } },
+  },
+};
+
 // ── Drawer Root ──────────────────────────────────────────
 
 export type DrawerProps = {
@@ -34,6 +55,10 @@ export type DrawerProps = {
   children: React.ReactNode;
 };
 
+/**
+ * DrawerRoot uses framer-motion AnimatePresence for smooth
+ * enter AND exit transitions. No jarring mount/unmount.
+ */
 function DrawerRoot({
   isOpen,
   onClose,
@@ -63,48 +88,65 @@ function DrawerRoot({
     };
   }, [isOpen, handleKeyDown]);
 
-  if (!isOpen) return null;
-
   return createPortal(
-    <DrawerContext.Provider value={{ isOpen, onClose, side }}>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
-        onClick={closeOnBackdrop ? onClose : undefined}
-        aria-hidden="true"
-      />
-      {children}
-    </DrawerContext.Provider>,
+    <AnimatePresence>
+      {isOpen && (
+        <DrawerContext.Provider value={{ isOpen, onClose, side }}>
+          <div className="fixed inset-0 z-50" role="dialog" aria-modal="true">
+            {/* Backdrop — smooth fade with subtle blur */}
+            <motion.div
+              variants={backdropVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+              onClick={closeOnBackdrop ? onClose : undefined}
+              aria-hidden="true"
+            />
+            {children}
+          </div>
+        </DrawerContext.Provider>
+      )}
+    </AnimatePresence>,
     document.body
   );
 }
 
 // ── Drawer Content ───────────────────────────────────────
 
-export type DrawerContentProps = React.HTMLAttributes<HTMLDivElement> & {
+export type DrawerContentProps = {
+  /** Additional CSS classes */
+  className?: string;
   /** Width of the drawer panel */
   width?: string;
+  children?: React.ReactNode;
 };
 
 const DrawerContent = React.forwardRef<HTMLDivElement, DrawerContentProps>(
-  ({ className, width = "24rem", ...props }, ref) => {
+  ({ className, width = "24rem", children }, ref) => {
     const { side } = useDrawerContext();
+    const variants = panelVariants[side];
 
     return (
-      <div
+      <motion.div
         ref={ref}
+        variants={variants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
         className={cn(
-          "fixed inset-y-0 z-50 flex flex-col bg-[hsl(var(--ui-card))] text-[hsl(var(--ui-card-foreground))] border-[hsl(var(--ui-border))] shadow-2xl",
-          // Slide animation based on side
+          "absolute inset-y-0 z-50 flex flex-col bg-[hsl(var(--ui-card))] text-[hsl(var(--ui-card-foreground))] border-[hsl(var(--ui-border))] shadow-2xl",
           side === "right"
-            ? "right-0 border-l animate-in slide-in-from-right duration-300"
-            : "left-0 border-r animate-in slide-in-from-left duration-300",
+            ? "right-0 border-l"
+            : "left-0 border-r",
           className
         )}
         style={{ width }}
         onClick={(e) => e.stopPropagation()}
-        {...props}
-      />
+      >
+        {children}
+      </motion.div>
     );
   }
 );
@@ -236,6 +278,13 @@ DrawerClose.displayName = "DrawerClose";
 
 /**
  * Drawer compound component — slides in from left or right.
+ *
+ * Features:
+ * - Smooth enter AND exit transitions via framer-motion AnimatePresence
+ * - Spring-based open, tween-based close
+ * - Backdrop fade with subtle blur
+ * - Escape key and backdrop click to close
+ * - Body scroll lock while open
  *
  * Usage:
  *   <Drawer isOpen={open} onClose={close} side="right">
